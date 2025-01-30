@@ -10,15 +10,15 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(LevelRenderer.class)
 public class MixinLevelRenderer implements Capture {
-    @Unique private Frustum frustum;
+    @Unique private Frustum cullParticles$frustum;
 
-    @ModifyVariable(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FogRenderer;setupColor(Lnet/minecraft/client/Camera;FLnet/minecraft/client/multiplayer/ClientLevel;IF)V"))
+    @ModifyVariable(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;setupRender(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/culling/Frustum;ZZ)V"))
     private Frustum captureFrustum(Frustum frustum2) {
-        return frustum = frustum2;
+        return cullParticles$frustum = frustum2;
     }
 
-    @Override
-    public Frustum capturedFrustum() {
-        return frustum;
+    @Unique
+    public Frustum cullParticles$capturedFrustum() {
+        return cullParticles$frustum;
     }
 }
